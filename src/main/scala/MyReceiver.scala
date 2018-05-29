@@ -34,12 +34,13 @@ class MyReceiver(host: String, port: Int)
       val srvAddress = InetAddress.getByName(host)
       socket = new Socket(srvAddress, port)
 
-      // Until stopped or connection broken continue reading
-      val reader = new BufferedReader(
-        new InputStreamReader(socket.getInputStream, StandardCharsets.UTF_8))
-      userInput = reader.readLine()
       val writer = new PrintWriter(socket.getOutputStream, true)
       writer.println("user " + generateClientId + " pass -1 vers ogn-client-java 1.0.0")
+
+      // Until stopped or connection broken continue reading
+      val reader = new BufferedReader(
+        new InputStreamReader(socket.getInputStream))
+      userInput = reader.readLine()
       while (!isStopped && userInput != null) {
         store(userInput)
         userInput = reader.readLine()

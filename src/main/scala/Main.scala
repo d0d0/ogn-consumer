@@ -15,10 +15,13 @@ object Main {
     val sc = spark.sparkContext
     val ssc = new StreamingContext(sc, Seconds(5))
 
-    val receiver = new MyReceiver("aprs.glidernet.org", 14580)
+    val receiver = new OGNSparkReceiver("aprs.glidernet.org", 10152)
     val stream = ssc.receiverStream(receiver)
 
-    stream.print()
+    stream.foreachRDD(x => {
+      x.foreach(println)
+      x.foreach(Parser.parse)
+    })
 
     ssc.start()
     ssc.awaitTermination()

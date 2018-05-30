@@ -6,9 +6,9 @@ import org.apache.spark.internal.Logging
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.receiver.Receiver
 
-class MyReceiver(host: String, port: Int)
+class OGNSparkReceiver(host: String, port: Int)
   extends Receiver[String](StorageLevel.MEMORY_AND_DISK_2) with Logging {
-  var socket: Socket = null
+  var socket: Socket = _
 
 
   def onStart() {
@@ -30,16 +30,14 @@ class MyReceiver(host: String, port: Int)
     var userInput: String = null
     try {
       // Connect to host:port
-      import java.net.InetAddress
       val srvAddress = InetAddress.getByName(host)
       socket = new Socket(srvAddress, port)
 
       val writer = new PrintWriter(socket.getOutputStream, true)
-      writer.println("user " + generateClientId + " pass -1 vers ogn-client-java 1.0.0")
+      writer.println("user " + generateClientId + " pass -1 vers spark-client 0.0.1")
 
       // Until stopped or connection broken continue reading
-      val reader = new BufferedReader(
-        new InputStreamReader(socket.getInputStream))
+      val reader = new BufferedReader(new InputStreamReader(socket.getInputStream))
       userInput = reader.readLine()
       while (!isStopped && userInput != null) {
         store(userInput)

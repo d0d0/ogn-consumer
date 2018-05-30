@@ -1,6 +1,6 @@
 import java.io.{BufferedReader, InputStreamReader, PrintWriter}
-import java.net.Socket
-import java.nio.charset.StandardCharsets
+import java.net.{InetAddress, Socket}
+import java.util.UUID
 
 import org.apache.spark.internal.Logging
 import org.apache.spark.storage.StorageLevel
@@ -59,9 +59,6 @@ class MyReceiver(host: String, port: Int)
         restart("Error receiving data", t)
     }
   }
-
-  import java.net.InetAddress
-  import java.util.UUID
 
   def generateClientId: String = {
     val suffix = UUID.randomUUID.toString.split("-")(3).toUpperCase

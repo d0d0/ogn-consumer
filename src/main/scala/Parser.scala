@@ -10,5 +10,20 @@ object Parser {
     val statusMatcher = aprsStatusPattern.matcher(line)
     val positionMatcher = aprsPositionPattern.matcher(line)
     //println(statusMatcher.matches(), positionMatcher.matches())
+    if (positionMatcher.matches()) {
+      val comment = positionMatcher.group("comment")
+      if (comment == null) {
+        //println(positionMatcher)
+      } else {
+        val aircraftMatcher = ognAircraftPattern.matcher(comment)
+        if (aircraftMatcher.matches) {
+          println(positionMatcher.group("callsign"), positionMatcher.group("time"), positionMatcher.group("latitude"))
+        }
+        val receiverMatcher = ognReceiverPattern.matcher(comment)
+        if (receiverMatcher.matches) {
+          //println(receiverMatcher)
+        }
+      }
+    }
   }
 }

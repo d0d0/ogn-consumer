@@ -6,8 +6,19 @@ object Parser {
   val ognAircraftPattern: Pattern = Pattern.compile(PatternConstants.PATTERN_AIRCRAFT_BEACON)
   val ognReceiverPattern: Pattern = Pattern.compile(PatternConstants.PATTERN_RECEIVER_BEACON)
 
-  def parse(line: String): Unit = {
+  def isReceiver(line: String): Boolean = {
     val statusMatcher = aprsStatusPattern.matcher(line)
+    if (statusMatcher.matches()) {
+      val comment = statusMatcher.group("comment")
+      val receiverMatcher = ognReceiverPattern.matcher(comment)
+
+      receiverMatcher.matches
+    } else {
+      false
+    }
+  }
+
+  def parse(line: String): Unit = {
     val positionMatcher = aprsPositionPattern.matcher(line)
     //println(statusMatcher.matches(), positionMatcher.matches())
     if (positionMatcher.matches()) {

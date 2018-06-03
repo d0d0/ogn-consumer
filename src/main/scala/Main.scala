@@ -34,9 +34,16 @@ object Main {
 
     val receiver = new OGNSparkReceiver("aprs.glidernet.org", 10152)
 
-    ssc
+    val stream = ssc
       .receiverStream(receiver)
-      .writeToKafka(producerConfig = producerConfig, s => new ProducerRecord[String, String](topic, s))
+
+    stream
+      .filter(x => true)
+      .writeToKafka(producerConfig = producerConfig, s => new ProducerRecord[String, String]("planes", s))
+
+    stream
+      .filter(x => true)
+      .writeToKafka(producerConfig = producerConfig, s => new ProducerRecord[String, String]("receiver", s))
 
     ssc.start()
     ssc.awaitTermination()

@@ -38,12 +38,16 @@ object Main {
       .receiverStream(receiver)
 
     stream
-      .filter(x => true)
-      .writeToKafka(producerConfig = producerConfig, s => new ProducerRecord[String, String]("planes", s))
+      .filter(Parser.isAPRSStatus)
+      .writeToKafka(producerConfig = producerConfig, s => new ProducerRecord[String, String]("aprs_status", s))
 
     stream
-      .filter(x => true)
-      .writeToKafka(producerConfig = producerConfig, s => new ProducerRecord[String, String]("receiver", s))
+      .filter(Parser.isAircraft)
+      .writeToKafka(producerConfig = producerConfig, s => new ProducerRecord[String, String]("aircraft", s))
+
+    stream
+      .filter(Parser.isBeacon)
+      .writeToKafka(producerConfig = producerConfig, s => new ProducerRecord[String, String]("beacon", s))
 
     ssc.start()
     ssc.awaitTermination()

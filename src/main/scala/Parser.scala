@@ -6,35 +6,40 @@ object Parser {
   val ognAircraftPattern: Pattern = Pattern.compile(PatternConstants.PATTERN_AIRCRAFT_BEACON)
   val ognReceiverPattern: Pattern = Pattern.compile(PatternConstants.PATTERN_RECEIVER_BEACON)
 
-  def isReceiver(line: String): Boolean = {
+  def isAPRSStatus(line: String): Boolean = {
     val statusMatcher = aprsStatusPattern.matcher(line)
     if (statusMatcher.matches()) {
       val comment = statusMatcher.group("comment")
       val receiverMatcher = ognReceiverPattern.matcher(comment)
-
       receiverMatcher.matches
     } else {
       false
     }
   }
 
-  def parse(line: String): Unit = {
+  def isAircraft(line: String): Boolean = {
     val positionMatcher = aprsPositionPattern.matcher(line)
-    //println(statusMatcher.matches(), positionMatcher.matches())
     if (positionMatcher.matches()) {
       val comment = positionMatcher.group("comment")
-      if (comment == null) {
-        //println(positionMatcher)
-      } else {
+      if (comment != null) {
         val aircraftMatcher = ognAircraftPattern.matcher(comment)
-        if (aircraftMatcher.matches) {
-          println(positionMatcher.group("callsign"), positionMatcher.group("time"), positionMatcher.group("latitude"))
-        }
-        val receiverMatcher = ognReceiverPattern.matcher(comment)
-        if (receiverMatcher.matches) {
-          //println(receiverMatcher)
-        }
+        aircraftMatcher.matches()
+      } else {
+        false
       }
+    } else {
+      false
+    }
+  }
+
+  def isBeacon(line: String): Boolean = {
+    val positionMatcher = aprsPositionPattern.matcher(line)
+    if (positionMatcher.matches()) {
+      val comment = positionMatcher.group("comment")
+      val receiverMatcher = ognReceiverPattern.matcher(comment)
+      comment == null || receiverMatcher.matches()
+    } else {
+      false
     }
   }
 }

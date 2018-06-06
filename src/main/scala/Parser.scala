@@ -36,8 +36,12 @@ object Parser {
     val positionMatcher = aprsPositionPattern.matcher(line)
     if (positionMatcher.matches()) {
       val comment = positionMatcher.group("comment")
-      val receiverMatcher = ognReceiverPattern.matcher(comment)
-      comment == null || receiverMatcher.matches()
+      if (comment != null) {
+        val receiverMatcher = ognReceiverPattern.matcher(comment)
+        receiverMatcher.matches()
+      } else {
+        true
+      }
     } else {
       false
     }

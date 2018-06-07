@@ -1,11 +1,11 @@
 import java.util.UUID
 
-import org.apache.log4j.{Level, Logger}
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming.{Seconds, StreamingContext}
 import kafka.writer._
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.{StringDeserializer, StringSerializer}
+import org.apache.log4j.{Level, Logger}
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.streaming.{Milliseconds, StreamingContext}
 
 object Main {
 
@@ -30,7 +30,7 @@ object Main {
     )
 
     val sc = spark.sparkContext
-    val ssc = new StreamingContext(sc, Seconds(5))
+    val ssc = new StreamingContext(sc, Milliseconds(500))
 
     val receiver = new OGNSparkReceiver("aprs.glidernet.org", 10152)
 

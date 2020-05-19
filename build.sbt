@@ -15,3 +15,11 @@ libraryDependencies ++= Seq(
   "com.datastax.spark" %% "spark-cassandra-connector" % "2.3.0"
     excludeAll ExclusionRule(organization = "org.apache.spark")
 )
+
+val circeVersion = "0.12.0-M3"
+
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser"
+).map(_ % circeVersion)

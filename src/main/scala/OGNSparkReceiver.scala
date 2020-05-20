@@ -1,5 +1,6 @@
 import java.io.{BufferedReader, InputStreamReader, PrintWriter}
 import java.net.{InetAddress, Socket}
+import java.nio.charset.StandardCharsets
 import java.util.UUID
 
 import org.apache.spark.internal.Logging
@@ -37,7 +38,7 @@ class OGNSparkReceiver(host: String, port: Int)
       writer.println("user " + generateClientId + " pass -1 vers spark-client 0.0.1")
 
       // Until stopped or connection broken continue reading
-      val reader = new BufferedReader(new InputStreamReader(socket.getInputStream))
+      val reader = new BufferedReader(new InputStreamReader(socket.getInputStream, StandardCharsets.UTF_8))
       userInput = reader.readLine()
       while (!isStopped && userInput != null) {
         store(userInput)
